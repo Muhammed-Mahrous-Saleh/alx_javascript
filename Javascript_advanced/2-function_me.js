@@ -1,6 +1,6 @@
 #!/usr/bin/node
 
-function welcomeMessage(fullName) {
+function welcomeMessage (fullName) {
   alert('Welcome ' + fullName);
 }
 
