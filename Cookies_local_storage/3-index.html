@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="logInForm">
+        <h2>Login to the website</h2>
+        <input type="text" id="firstname" placeholder="Firstname">
+        <input type="email" id="email" placeholder="Email">
+        <button onclick=setCookies()>Log me in</button>
+    </div>
+    <div id="welcomeContainer"></div>
+    <!-- <script src="src/index.js"></script> -->
+    <script>
+        const firstName = document.getElementById("firstname")
+        const email = document.getElementById("email")
+        const myCookies = document.createElement("p")
+        let login = false;
+        function getAllCookies() {
+            let decodedCookie = decodeURIComponent(document.cookie);
+            let ca = decodedCookie.split(';');
+            let cookiesstr = ""
+            for (let i = 0; i < ca.length; i++) {
+                cookiesstr += ca[i]
+            }
+            return cookiesstr;
+        }
+
+        function getCookie(cname) {
+            let name = cname + "=";
+            let decodedCookie = decodeURIComponent(document.cookie);
+            let ca = decodedCookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+
+        function setCookies() {
+            let exdays = 10;
+            const d = new Date();
+            d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+            let expires = "expires=" + d.toUTCString();
+            document.cookie = "firstname=" + firstName.value + ";" + expires + "; SameSite=Lax"
+            document.cookie = "email=" + email.value + ";" + expires + "; SameSite=Lax"
+            showWelcomeMessageOrForm()
+        }
+
+        function showForm() {
+            let logInForm = document.getElementById("logInForm");
+            let welcomeMessage = document.getElementById("welcome")
+            if (welcomeMessage) {
+                welcomeMessage.remove();
+            }
+
+            logInForm.style.display = "block"
+
+        }
+
+        function hideForm() {
+            let logInForm = document.getElementById("logInForm");
+            let welcomeMessage = document.getElementById("welcome")
+
+            logInForm.style.display = "none"
+
+        }
+
+        function deleteCookiesAndShowForm() {
+            let exdays = -500;
+            const d = new Date();
+            d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+            let expires = "expires=" + d.toUTCString();
+            document.cookie = "firstname=" + "" + ";" + expires + "; SameSite=Lax"
+            document.cookie = "email=" + "" + ";" + expires + "; SameSite=Lax"
+            showForm()
+        }
+        function showWelcomeMessageOrForm() {
+            if (getCookie("firstname") == '' || getCookie("email") == '') {
+                showForm()
+            } else {
+                hideForm()
+                let wlecomeMessage = `<h1 id="welcome">Welcome ${getCookie("firstname")} <a style="weight:normal;text-decoration:italic;margin-left:10px" onclick=deleteCookiesAndShowForm()>(Log out)</a></h1>`
+                document.getElementById("welcomeContainer").innerHTML = wlecomeMessage;
+            }
+        }
+        showWelcomeMessageOrForm()
+    </script>
+</body>
+
+</html>

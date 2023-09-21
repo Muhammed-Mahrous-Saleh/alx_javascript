@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        let availableItems = ["Shampoo", "Soap", "Sponge", "Water"]
+        if (typeof (window.localStorage) !== "undefined") {
+            createStore()
+            displayCart()
+        } else {
+            alert("Sorry, your browser does not support Web storage. Try again with a better one")
+        }
+        function addItemToCart(item) {
+            sessionStorage.setItem(item, true);
+            displayCart();
+        }
+        function createStore() {
+            const itemList = document.createElement("ul")
+
+            availableItems.forEach(item => {
+                const listItem = document.createElement("li");
+                listItem.textContent = item;
+                listItem.addEventListener("click", () => addItemToCart(item));
+                itemList.appendChild(listItem);
+            });
+            document.body.appendChild(itemList)
+        }
+        function displayCart() {
+            let oldMessage = document.getElementById("cartMessage");
+            if (oldMessage) {
+                oldMessage.remove()
+            }
+            const cartMessage = document.createElement("p");
+            const cartItemsCount = Object.keys(sessionStorage).length;
+
+            cartMessage.setAttribute("id", "cartMessage")
+            if (cartItemsCount === 0) {
+                cartMessage.textContent = "";
+            } else {
+                cartMessage.textContent = `You previously had ${cartItemsCount} item(s) in your cart.`;
+            }
+
+            document.body.appendChild(cartMessage)
+
+        }
+
+    </script>
+</body>
+
+</html>
